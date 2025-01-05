@@ -1,0 +1,58 @@
+[gd_scene load_steps=7 format=3 uid="uid://dhqr7pr1i2vme"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qncql"]
+sky_top_color = Color(0.0926014, 0.522351, 0.732282, 1)
+sky_horizon_color = Color(0.480774, 0.704375, 0.896324, 1)
+sky_energy_multiplier = 1.95
+ground_bottom_color = Color(0.290196, 0.466667, 0.843137, 1)
+ground_horizon_color = Color(0.290196, 0.466667, 0.843137, 1)
+
+[sub_resource type="Sky" id="Sky_nu1hk"]
+sky_material = SubResource("ProceduralSkyMaterial_qncql")
+
+[sub_resource type="Environment" id="Environment_gi38s"]
+background_mode = 2
+sky = SubResource("Sky_nu1hk")
+
+[sub_resource type="BoxMesh" id="BoxMesh_md1ii"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_2tnqq"]
+
+[sub_resource type="GDScript" id="GDScript_6ofah"]
+script/source = "extends MeshInstance3D
+
+var speed = 5.0
+
+func _ready():
+	set_physics_process(true)
+
+func _physics_process(delta):
+	var direction = Vector3()
+	if Input.is_action_pressed(\"ui_up\"):
+		direction.z -= 1
+	if Input.is_action_pressed(\"ui_down\"):
+		direction.z += 1
+	if Input.is_action_pressed(\"ui_left\"):
+		direction.x -= 1
+	if Input.is_action_pressed(\"ui_right\"):
+		direction.x += 1
+	direction = direction.normalized()
+	translate(direction * speed * delta)
+"
+
+[node name="Node3D" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_gi38s")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(8.18548, 0, 0, 0, 0.123155, 0, 0, 0, 12.0602, 0, 0, 0)
+mesh = SubResource("BoxMesh_md1ii")
+
+[node name="player" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.00666, 0, 0, 0, 1.00666, 0, 0, 0, 1.00666, 0.334347, 1.0869, -0.606896)
+mesh = SubResource("CylinderMesh_2tnqq")
+script = SubResource("GDScript_6ofah")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.9953, 0, -0.0968359, -0.0195957, 0.979311, 0.201409, 0.0948325, 0.20236, -0.974709, -0.396164, 1.28634, -5.04131)
